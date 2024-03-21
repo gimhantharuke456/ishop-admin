@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form, Input, Table, Space } from "antd";
+import { Button, Modal, Form, Input, Table, Space, InputNumber } from "antd";
 import {
   addOrder,
   getOrders,
@@ -57,16 +57,20 @@ const Order = () => {
 
   const columns = [
     {
-      title: "Order ID",
-      dataIndex: "id",
-      key: "id",
+      title: "Product Name",
+      dataIndex: "productName",
+      key: "productName",
     },
     {
       title: "Customer Name",
       dataIndex: "customerName",
       key: "customerName",
     },
-    // Add more columns as needed based on your order structure
+    {
+      title: "Total Bill",
+      dataIndex: "totalBill",
+      key: "totalBill",
+    },
     {
       title: "Action",
       key: "action",
@@ -98,7 +102,43 @@ const Order = () => {
         onCancel={handleCancel}
       >
         <Form form={form} layout="vertical">
-          {/* Define Form.Items for order details like customerName, orderDate, etc. */}
+          <Form.Item
+            name="productName"
+            label="Product Name"
+            rules={[
+              { required: true, message: "Please input the product name!" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="customerName"
+            label="Customer Name"
+            rules={[
+              { required: true, message: "Please input the customer name!" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="totalBill"
+            label="Total Bill"
+            rules={[
+              {
+                required: true,
+                message: "Please input the total bill amount!",
+              },
+            ]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              formatter={(value) =>
+                `LKR ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value.replace(/\LKR\s?|(,*)/g, "")}
+            />
+          </Form.Item>
         </Form>
       </Modal>
       <Table columns={columns} dataSource={orders} rowKey="id" />
